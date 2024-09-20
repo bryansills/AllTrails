@@ -11,7 +11,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import dagger.hilt.android.AndroidEntryPoint
+import ninja.bryansills.lunchtime.home.Home
 import ninja.bryansills.lunchtime.home.HomeScreen
 import ninja.bryansills.lunchtime.ui.theme.LunchtimeTheme
 
@@ -22,7 +26,12 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             LunchtimeTheme {
-                HomeScreen()
+                val navController = rememberNavController()
+                NavHost(navController, startDestination = Home) {
+                    composable<Home> {
+                        HomeScreen()
+                    }
+                }
             }
         }
     }
