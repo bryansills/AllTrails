@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Lunchtime</string>
+    <string name="app_name">AllTrails at Lunch</string>
+    <string name="location_permission_fail">:(\nThis app needs to know your location in order to properly work…</string>
 </resources>
