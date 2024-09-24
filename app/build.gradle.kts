@@ -1,3 +1,9 @@
+import com.android.build.api.dsl.VariantDimension
+import org.jetbrains.kotlin.util.capitalizeDecapitalize.toUpperCaseAsciiOnly
+import java.io.FileInputStream
+import java.io.InputStreamReader
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -23,6 +29,16 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        val rootSecrets = rootProject.rootProperties("secrets.properties")
+        buildConfigString(
+            "GoogleMapsApi",
+            rootSecrets.getSecret("google.maps.api"),
+        )
+        buildConfigString(
+            "GooglePlacesApi",
+            rootSecrets.getSecret("google.places.api"),
+        )
     }
 
     buildTypes {
@@ -43,6 +59,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -78,4 +95,30 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+}
+
+fun Project.rootProperties(propertiesPath: String): Properties {
+    val result = Properties()
+    val keystorePropertiesFile = this.rootProject.file(propertiesPath)
+    if (keystorePropertiesFile.isFile) {
+        InputStreamReader(FileInputStream(keystorePropertiesFile), Charsets.UTF_8).use { reader ->
+            result.load(reader)
+        }
+    }
+    return result
+}
+
+fun Properties.getSecret(
+    propertyName: String,
+    environmentName: String = propertyName.replace(".", "_").toUpperCaseAsciiOnly(),
+    fallback: String = "INVALID $propertyName",
+): String {
+    val propertyValue: String? = this.getProperty(propertyName)
+    val environmentValue: String? = System.getenv(environmentName)
+
+    return propertyValue ?: environmentValue ?: fallback
+}
+
+fun VariantDimension.buildConfigString(key: String, value: String) {
+    this.buildConfigField("String", key, "\"$value\"")
 }

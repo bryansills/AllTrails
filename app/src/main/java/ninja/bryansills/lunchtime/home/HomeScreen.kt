@@ -30,6 +30,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -68,17 +69,17 @@ fun HomeScreen(
             Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 TopBar()
 
-                val selectedView by rememberSaveable { mutableStateOf(HomeScreenView.List) }
+                var selectedView by rememberSaveable { mutableStateOf(HomeScreenView.List) }
 
                 Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
                     when (selectedView) {
                         HomeScreenView.List -> HomeList(uiState.searchResults)
-                        HomeScreenView.Map -> TODO()
+                        HomeScreenView.Map -> MapList(uiState.searchResults)
                     }
 
                     BottomToggleButton(
                         selectedView = selectedView,
-                        onClick = {},
+                        onClick = { selectedView = selectedView.toggle() },
                         modifier = Modifier
                             .align(Alignment.BottomCenter)
                             .padding(bottom = 48.dp) // TODO: validate
@@ -93,6 +94,14 @@ fun HomeScreen(
 enum class HomeScreenView(@DrawableRes val oppositeIcon: Int, @StringRes val oppositeTitle: Int) : Parcelable {
     List(oppositeIcon = R.drawable.icon_map, oppositeTitle = R.string.map_title),
     Map(oppositeIcon = R.drawable.icon_list, oppositeTitle = R.string.list_title),
+    ;
+
+    fun toggle(): HomeScreenView {
+        return when (this) {
+            List -> Map
+            Map -> List
+        }
+    }
 }
 
 @Composable
@@ -144,6 +153,21 @@ private fun BottomToggleButton(
 
 @Composable
 private fun HomeList(restaurants: List<UiRestaurant>, modifier: Modifier = Modifier) {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 32.dp), // TODO: validate
+        verticalArrangement = Arrangement.spacedBy(24.dp), // TODO: validate
+        modifier = modifier
+    ) {
+        items(restaurants) { item: UiRestaurant ->
+            RestaurantItem(item)
+        }
+    }
+}
+
+@Composable
+private fun MapList(restaurants: List<UiRestaurant>, modifier: Modifier = Modifier) {
+    var selectedRestaurant: UiRestaurant? by rememberSaveable { mutableStateOf(null) }
+
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 32.dp), // TODO: validate
         verticalArrangement = Arrangement.spacedBy(24.dp), // TODO: validate
