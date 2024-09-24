@@ -1,6 +1,8 @@
 package ninja.bryansills.lunchtime.home
 
+import android.content.Context
 import android.os.Parcelable
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
@@ -42,20 +44,27 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberMarkerState
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ninja.bryansills.lunchtime.R
@@ -174,8 +183,8 @@ private fun HomeList(restaurants: List<UiRestaurant>, modifier: Modifier = Modif
     }
 }
 
-val sanFrancisco = LatLng(37.7749, -122.4194)
-val defaultCameraPosition = CameraPosition.fromLatLngZoom(sanFrancisco, 11f)
+private val sanFrancisco = LatLng(37.7749, -122.4194)
+private val defaultCameraPosition = CameraPosition.fromLatLngZoom(sanFrancisco, 11f)
 
 @Composable
 private fun MapList(restaurants: List<UiRestaurant>, modifier: Modifier = Modifier) {
@@ -186,12 +195,29 @@ private fun MapList(restaurants: List<UiRestaurant>, modifier: Modifier = Modifi
     Box(
         modifier = modifier.fillMaxSize()
     ) {
+
         GoogleMap(
             cameraPositionState = cameraPositionState,
-            onMapLoaded = {
-                isMapLoaded = true
-            },
-        )
+            onMapLoaded = { isMapLoaded = true },
+        ) {
+            val context = LocalContext.current
+            val unselectedPin = remember { context.bitmapDescriptor(R.drawable.pin_resting) }
+            val selectedPin = remember { context.bitmapDescriptor(R.drawable.pin_selected) }
+
+            restaurants.forEachIndexed { index, restaurant ->
+                MarkerInfoWindow(
+                    state = rememberMarkerState(position = restaurant.coords),
+                    icon = if (index == 5) selectedPin else unselectedPin,
+                    onClick = { Log.d("BLARG", "Window clicked"); false },
+                    onInfoWindowClose = { Log.d("BLARG", "Window close") }
+                ) {
+                    RestaurantItem(
+                        restaurant,
+                        modifier = Modifier.padding(horizontal = 32.dp)
+                    )
+                }
+            }
+        }
         if (!isMapLoaded) {
             AnimatedVisibility(
                 modifier = Modifier
@@ -208,6 +234,13 @@ private fun MapList(restaurants: List<UiRestaurant>, modifier: Modifier = Modifi
             }
         }
     }
+}
+
+private fun Context.bitmapDescriptor(
+    @DrawableRes id: Int,
+): BitmapDescriptor? {
+    val drawable = ResourcesCompat.getDrawable(this.resources, id, null)
+    return drawable?.toBitmapOrNull()?.let { BitmapDescriptorFactory.fromBitmap(it) }
 }
 
 @Composable
