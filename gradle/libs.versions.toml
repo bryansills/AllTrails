@@ -34,6 +34,7 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
 kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2"
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
+google-maps = { group = "com.google.maps.android", name = "maps-compose", version = "6.1.2" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -31,9 +31,8 @@ android {
         }
 
         val rootSecrets = rootProject.rootProperties("secrets.properties")
-        buildConfigString(
-            "GoogleMapsApi",
-            rootSecrets.getSecret("google.maps.api"),
+        manifestPlaceholders += mapOf(
+            "googleMapsApi" to rootSecrets.getSecret("google.maps.api")
         )
         buildConfigString(
             "GooglePlacesApi",
@@ -87,6 +86,7 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
     implementation(libs.kotlinx.serialization)
     implementation(libs.accompanist.permissions)
+    implementation(libs.google.maps)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

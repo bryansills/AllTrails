@@ -3,6 +3,9 @@ package ninja.bryansills.lunchtime.home
 import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -15,10 +18,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -29,6 +34,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -46,6 +52,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ninja.bryansills.lunchtime.R
@@ -164,17 +174,38 @@ private fun HomeList(restaurants: List<UiRestaurant>, modifier: Modifier = Modif
     }
 }
 
+val sanFrancisco = LatLng(37.7749, -122.4194)
+val defaultCameraPosition = CameraPosition.fromLatLngZoom(sanFrancisco, 11f)
+
 @Composable
 private fun MapList(restaurants: List<UiRestaurant>, modifier: Modifier = Modifier) {
+    var isMapLoaded by remember { mutableStateOf(false) }
+    val cameraPositionState = rememberCameraPositionState { position = defaultCameraPosition }
     var selectedRestaurant: UiRestaurant? by rememberSaveable { mutableStateOf(null) }
 
-    LazyColumn(
-        contentPadding = PaddingValues(horizontal = 24.dp, vertical = 32.dp), // TODO: validate
-        verticalArrangement = Arrangement.spacedBy(24.dp), // TODO: validate
-        modifier = modifier
+    Box(
+        modifier = modifier.fillMaxSize()
     ) {
-        items(restaurants) { item: UiRestaurant ->
-            RestaurantItem(item)
+        GoogleMap(
+            cameraPositionState = cameraPositionState,
+            onMapLoaded = {
+                isMapLoaded = true
+            },
+        )
+        if (!isMapLoaded) {
+            AnimatedVisibility(
+                modifier = Modifier
+                    .matchParentSize(),
+                visible = !isMapLoaded,
+                enter = EnterTransition.None,
+                exit = fadeOut()
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .background(MaterialTheme.colorScheme.background)
+                        .wrapContentSize()
+                )
+            }
         }
     }
 }
