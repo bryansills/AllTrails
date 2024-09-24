@@ -87,6 +87,9 @@ dependencies {
     implementation(libs.kotlinx.serialization)
     implementation(libs.accompanist.permissions)
     implementation(libs.google.maps)
+    implementation(libs.google.location.services)
+    implementation(libs.coroutines)
+    implementation(libs.coroutines.play.services)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
