@@ -32,7 +32,7 @@ android {
 
         val rootSecrets = rootProject.rootProperties("secrets.properties")
         manifestPlaceholders += mapOf(
-            "googleMapsApi" to rootSecrets.getSecret("google.maps.api")
+            "googleMapsApi" to rootSecrets.getSecret("google.places.api")
         )
         buildConfigString(
             "GooglePlacesApi",
