@@ -48,6 +48,8 @@ import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ninja.bryansills.lunchtime.R
+import ninja.bryansills.lunchtime.ui.theme.PaleGreen
+import ninja.bryansills.lunchtime.ui.theme.StrongGreen
 
 @Serializable
 data object Home
@@ -108,7 +110,7 @@ private fun TopBar(modifier: Modifier = Modifier) {
             painter = painterResource(R.drawable.header_logo),
             contentDescription = "AllTrails for lunch logo"
         )
-        Box(modifier = Modifier.background(Color.Red).size(width = 250.dp, 48.dp))
+        Box(modifier = Modifier.background(Color.Red).size(width = 250.dp, 48.dp)) // TODO: actual text
     }
 }
 
@@ -132,7 +134,10 @@ private fun BottomToggleButton(
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
                 contentDescription = stringResource(selectedView.oppositeTitle),
             )
-            Text(text = stringResource(selectedView.oppositeTitle))
+            Text(
+                text = stringResource(selectedView.oppositeTitle),
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
     }
 }
@@ -170,11 +175,12 @@ private fun RestaurantItem(item: UiRestaurant, modifier: Modifier = Modifier) {
                 modifier = Modifier.size(width = 64.dp, height = 72.dp),
             )
 
-            Column {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row {
                     Text(
                         text = item.name,
-                        style = MaterialTheme.typography.labelLarge, // TODO: all the typography
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = StrongGreen,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.weight(1f),
@@ -188,27 +194,34 @@ private fun RestaurantItem(item: UiRestaurant, modifier: Modifier = Modifier) {
                             .padding(start = 8.dp), // TODO: validate
                     )
                 }
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(2.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Image(
                         painter = painterResource(R.drawable.icon_star),
                         contentDescription = "Star rating",
                     )
                     Text(
                         text = "%.1f".format(Locale.current.platformLocale, item.rating),
-                        style = MaterialTheme.typography.labelLarge, // TODO: all the typography
+                        style = MaterialTheme.typography.labelSmall,
+                        color = StrongGreen,
                     )
                     Text(
                         text = "•",
-                        style = MaterialTheme.typography.labelLarge, // TODO: all the typography
+                        style = MaterialTheme.typography.labelSmall,
+                        color = StrongGreen,
                     )
                     Text(
-                        text = "%,d".format(Locale.current.platformLocale, item.numOfRatings),
-                        style = MaterialTheme.typography.labelLarge, // TODO: all the typography
+                        text = "(%,d)".format(Locale.current.platformLocale, item.numOfRatings),
+                        style = MaterialTheme.typography.labelSmall,
+                        color = PaleGreen,
                     )
                 }
                 Text(
                     text = item.city,
-                    style = MaterialTheme.typography.labelLarge, // TODO: all the typography
+                    style = MaterialTheme.typography.labelSmall,
+                    color = PaleGreen,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
