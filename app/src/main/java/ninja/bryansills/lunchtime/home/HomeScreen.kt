@@ -13,6 +13,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -90,24 +91,56 @@ fun HomeScreen(
             Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
                 TopBar()
 
-                var selectedView by rememberSaveable { mutableStateOf(HomeScreenView.List) }
-
-                Box(modifier = Modifier.fillMaxWidth().weight(1f)) {
-                    when (selectedView) {
-                        HomeScreenView.List -> HomeList(uiState.searchResults)
-                        HomeScreenView.Map -> MapList(uiState.searchResults)
-                    }
-
-                    BottomToggleButton(
-                        selectedView = selectedView,
-                        onClick = { selectedView = selectedView.toggle() },
-                        modifier = Modifier
-                            .align(Alignment.BottomCenter)
-                            .padding(bottom = 48.dp) // TODO: validate
+                when (val state = uiState) {
+                    is HomeUiState.Error -> ErrorView(
+                        message = state.errorMessage,
+                    )
+                    is HomeUiState.Normal -> NormalView(
+                        searchResults = state.searchResults,
+                        isLoading = state.isLoading,
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun ColumnScope.ErrorView(
+    message: String,
+    modifier: Modifier = Modifier,
+) {
+    Box(modifier = modifier.fillMaxWidth().weight(1f)) {
+        Text(
+            text = message,
+            textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
+}
+
+@Composable
+private fun ColumnScope.NormalView(
+    searchResults: List<UiRestaurant>,
+    isLoading: Boolean,
+    modifier: Modifier = Modifier,
+) {
+    var selectedView by rememberSaveable { mutableStateOf(HomeScreenView.List) }
+
+    Box(modifier = modifier.fillMaxWidth().weight(1f)) {
+        when (selectedView) {
+            HomeScreenView.List -> HomeList(searchResults)
+            HomeScreenView.Map -> MapList(searchResults)
+        }
+
+        BottomToggleButton(
+            selectedView = selectedView,
+            onClick = { selectedView = selectedView.toggle() },
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 48.dp) // TODO: validate
+        )
     }
 }
 
