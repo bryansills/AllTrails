@@ -1,6 +1,5 @@
 package ninja.bryansills.lunchtime.home
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
@@ -30,25 +29,6 @@ class HomeViewModel @Inject constructor(
     private val locationManager: LocationManager,
     @Dispatcher(LunchtimeDispatcher.Io) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
-    init {
-        viewModelScope.launch {
-            val nearbySearch = TextSearch(
-                textQuery = "The Bird",
-                locationBias = LocationRestriction(
-                    circle = LocationCircle(
-                        center = NetworkLocation(
-                            latitude = 37.7749,
-                            longitude = -122.4194,
-                        ),
-                        radius = 1000.0
-                    )
-                )
-            )
-            val response = googlePlacesApi.getLocationsByQuery(nearbySearch)
-            Log.d("BLARG", response.toString())
-        }
-    }
-
     private val _uiState = MutableStateFlow<HomeUiState>(HomeUiState.Normal(
         isLoading = true,
         searchResults = listOf()
@@ -77,7 +57,35 @@ class HomeViewModel @Inject constructor(
                 HomeUiState.Normal(
                     isLoading = false,
                     currentLocation = location,
-                    searchResults = response.places.toUiRestaurants()
+                    searchResults = response.places?.toUiRestaurants() ?: listOf()
+                )
+            } catch (ex: Exception) {
+                HomeUiState.Error(
+                    errorMessage = ex.message ?: "Something unknown went wrong"
+                )
+            }
+        }
+    }
+
+    fun queryNearby(query: String) {
+        viewModelScope.launch(ioDispatcher) {
+            _uiState.value = try {
+                _uiState.update { old ->
+                    when (old) {
+                        is HomeUiState.Error -> HomeUiState.Normal(isLoading = true, searchResults = listOf())
+                        is HomeUiState.Normal -> old.copy(isLoading = true)
+                    }
+                }
+                val location = locationManager.getLatestLocation()
+                val nearbySearch = TextSearch(
+                    textQuery = query,
+                    locationBias = location.toLocationRestriction()
+                )
+                val response = googlePlacesApi.getLocationsByQuery(nearbySearch)
+                HomeUiState.Normal(
+                    isLoading = false,
+                    currentLocation = location,
+                    searchResults = response.places?.toUiRestaurants() ?: listOf()
                 )
             } catch (ex: Exception) {
                 HomeUiState.Error(
@@ -137,7 +145,7 @@ private fun List<NetworkPlace>.toUiRestaurants(): List<UiRestaurant> {
                 ?.longText
                 ?: "Unknown",
             isBookmarked = false,
-            photoUri = network.photos.firstOrNull()?.authorAttributions?.firstOrNull()?.photoUri
+            photoUri = network.photos?.firstOrNull()?.authorAttributions?.firstOrNull()?.photoUri
         )
     }
 }

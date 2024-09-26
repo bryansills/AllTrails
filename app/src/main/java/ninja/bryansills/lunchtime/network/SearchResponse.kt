@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class SearchResponse(
-    val places: List<NetworkPlace>
+    val places: List<NetworkPlace>? = listOf()
 )
 
 @Serializable
@@ -12,10 +12,10 @@ data class NetworkPlace(
     val id: String,
     val displayName: NetworkDisplayName,
     val location: NetworkLocation,
-    val rating: Double,
-    val userRatingCount: Int,
+    val rating: Double = 0.0,
+    val userRatingCount: Int = 0,
     val addressComponents: List<NetworkAddressComponent>,
-    val photos: List<NetworkPhotos>
+    val photos: List<NetworkPhotos>? = listOf()
 )
 
 @Serializable
