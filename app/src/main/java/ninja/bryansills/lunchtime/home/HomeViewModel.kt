@@ -76,6 +76,7 @@ class HomeViewModel @Inject constructor(
                 val response = googlePlacesApi.getNearbyLocations(nearbySearch)
                 HomeUiState.Normal(
                     isLoading = false,
+                    currentLocation = location,
                     searchResults = response.places.toUiRestaurants()
                 )
             } catch (ex: Exception) {
@@ -87,9 +88,12 @@ class HomeViewModel @Inject constructor(
     }
 }
 
+private val sanFrancisco = LatLng(37.7749, -122.4194)
+
 sealed interface HomeUiState {
     data class Normal(
         val isLoading: Boolean,
+        val currentLocation: LatLng = sanFrancisco,
         val searchResults: List<UiRestaurant>
     ) : HomeUiState
 

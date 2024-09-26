@@ -98,6 +98,7 @@ fun HomeScreen(
                     )
                     is HomeUiState.Normal -> NormalView(
                         searchResults = state.searchResults,
+                        currentLocation = state.currentLocation,
                         isLoading = state.isLoading,
                     )
                 }
@@ -124,6 +125,7 @@ private fun ColumnScope.ErrorView(
 @Composable
 private fun ColumnScope.NormalView(
     searchResults: List<UiRestaurant>,
+    currentLocation: LatLng,
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
@@ -132,7 +134,7 @@ private fun ColumnScope.NormalView(
     Box(modifier = modifier.fillMaxWidth().weight(1f)) {
         when (selectedView) {
             HomeScreenView.List -> HomeList(searchResults)
-            HomeScreenView.Map -> MapList(searchResults)
+            HomeScreenView.Map -> MapList(searchResults, currentLocation)
         }
 
         BottomToggleButton(
@@ -219,12 +221,14 @@ private fun HomeList(restaurants: List<UiRestaurant>, modifier: Modifier = Modif
     }
 }
 
-private val sanFrancisco = LatLng(37.7749, -122.4194)
-private val defaultCameraPosition = CameraPosition.fromLatLngZoom(sanFrancisco, 11f)
-
 @Composable
-private fun MapList(restaurants: List<UiRestaurant>, modifier: Modifier = Modifier) {
+private fun MapList(
+    restaurants: List<UiRestaurant>,
+    currentLocation: LatLng,
+    modifier: Modifier = Modifier
+) {
     var isMapLoaded by remember { mutableStateOf(false) }
+    val defaultCameraPosition = remember(currentLocation) { CameraPosition.fromLatLngZoom(currentLocation, 11f) }
     val cameraPositionState = rememberCameraPositionState { position = defaultCameraPosition }
 
     Box(
