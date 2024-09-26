@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
@@ -17,7 +18,7 @@ interface LocationManager {
 }
 
 class DefaultLocationManager @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
     @Dispatcher(LunchtimeDispatcher.Io) private val ioDispatcher: CoroutineDispatcher
 ): LocationManager {
     private val playServices by lazy {

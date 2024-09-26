@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import ninja.bryansills.lunchtime.location.LocationManager
 import ninja.bryansills.lunchtime.network.GooglePlacesApi
 import ninja.bryansills.lunchtime.network.LocationCircle
 import ninja.bryansills.lunchtime.network.LocationRestriction
@@ -19,6 +21,7 @@ import kotlin.random.Random
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val googlePlacesApi: GooglePlacesApi,
+    private val locationManager: LocationManager,
 ) : ViewModel() {
     init {
         viewModelScope.launch {
@@ -58,6 +61,17 @@ class HomeViewModel @Inject constructor(
             }
         )
     )
+
+    var nearbyInitJob: Job? = null
+
+    fun loadNearby() {
+        if (nearbyInitJob != null) return
+
+        nearbyInitJob = viewModelScope.launch {
+            val location = locationManager.getLatestLocation()
+            Log.d("BLARG", "latitude ${location.latitude} longitude: ${location.longitude}")
+        }
+    }
 }
 
 data class HomeUiState(

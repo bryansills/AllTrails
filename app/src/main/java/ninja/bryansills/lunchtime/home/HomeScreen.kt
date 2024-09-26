@@ -81,7 +81,9 @@ fun HomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    WithLocation {
+    WithLocation(
+        onPermissionAccepted = viewModel::loadNearby
+    ) {
         Scaffold(
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
@@ -320,12 +322,16 @@ private fun RestaurantItem(item: UiRestaurant, modifier: Modifier = Modifier) {
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-private fun WithLocation(content: @Composable () -> Unit) {
+private fun WithLocation(
+    onPermissionAccepted: () -> Unit,
+    content: @Composable () -> Unit
+) {
     val locationPermissionState = rememberPermissionState(
         android.Manifest.permission.ACCESS_COARSE_LOCATION
     )
 
     if (locationPermissionState.status.isGranted) {
+        LaunchedEffect(Unit) { onPermissionAccepted() }
         content()
     } else {
         LaunchedEffect(Unit) { locationPermissionState.launchPermissionRequest() }
