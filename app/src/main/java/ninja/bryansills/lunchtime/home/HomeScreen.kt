@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmapOrNull
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -225,7 +226,6 @@ private val defaultCameraPosition = CameraPosition.fromLatLngZoom(sanFrancisco, 
 private fun MapList(restaurants: List<UiRestaurant>, modifier: Modifier = Modifier) {
     var isMapLoaded by remember { mutableStateOf(false) }
     val cameraPositionState = rememberCameraPositionState { position = defaultCameraPosition }
-    var selectedRestaurant: UiRestaurant? by rememberSaveable { mutableStateOf(null) }
 
     Box(
         modifier = modifier.fillMaxSize()
@@ -290,13 +290,24 @@ private fun RestaurantItem(item: UiRestaurant, modifier: Modifier = Modifier) {
                 .padding(16.dp), // TODO: validate
             horizontalArrangement = Arrangement.spacedBy(16.dp), // TODO: validate
         ) {
-            Image(
-                painter = painterResource(R.drawable.placeholder_img), // TODO: real value with coil
-                contentDescription = "Preview image for ${item.name}",
-                contentScale = ContentScale.Crop,
-                alignment = Alignment.Center,
-                modifier = Modifier.size(width = 64.dp, height = 72.dp),
-            )
+            if (item.photoUri != null) {
+                AsyncImage(
+                    model = item.photoUri,
+                    placeholder = painterResource(R.drawable.placeholder_img),
+                    contentDescription = "Preview image for ${item.name}",
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                    modifier = Modifier.size(width = 64.dp, height = 72.dp),
+                )
+            } else {
+                Image(
+                    painter = painterResource(R.drawable.placeholder_img),
+                    contentDescription = "Preview image for ${item.name}",
+                    contentScale = ContentScale.Crop,
+                    alignment = Alignment.Center,
+                    modifier = Modifier.size(width = 64.dp, height = 72.dp),
+                )
+            }
 
             Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 Row {

@@ -93,6 +93,8 @@ dependencies {
     implementation(libs.retrofit)
     implementation(libs.retrofit.kotlinx)
     implementation(libs.okhttp)
+    implementation(libs.coil)
+    implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
