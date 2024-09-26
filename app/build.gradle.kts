@@ -90,6 +90,9 @@ dependencies {
     implementation(libs.google.location.services)
     implementation(libs.coroutines)
     implementation(libs.coroutines.play.services)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlinx)
+    implementation(libs.okhttp)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
