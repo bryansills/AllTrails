@@ -37,7 +37,7 @@ navigation-compose = { group = "androidx.navigation", name = "navigation-compose
 hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version = "1.2.0" }
 kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2"
 accompanist-permissions = { group = "com.google.accompanist", name = "accompanist-permissions", version.ref = "accompanist" }
-google-maps = { group = "com.google.maps.android", name = "maps-compose", version = "6.1.2" }
+google-maps = { group = "com.google.maps.android", name = "maps-compose", version = "7.0.0" }
 google-location-services = { group = "com.google.android.gms", name = "play-services-location", version = "21.3.0" }
 coroutines = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
 coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-play-services", version.ref = "coroutines" }
