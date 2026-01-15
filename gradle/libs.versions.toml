@@ -8,7 +8,7 @@ espressoCore = "3.7.0"
 lifecycleRuntimeKtx = "2.10.0"
 activityCompose = "1.12.2"
 composeBom = "2024.04.01"
-dagger = "2.57.2"
+dagger = "2.57.2" # TODO: delete kotlin-metadata when upgrading
 ksp = "2.3.4"
 accompanist = "0.37.3"
 coroutines = "1.10.2"
@@ -46,6 +46,7 @@ retrofit-kotlinx = { group = "com.squareup.retrofit2", name = "converter-kotlinx
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "5.3.2" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+kotlin-metadata = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", version.ref = "kotlin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

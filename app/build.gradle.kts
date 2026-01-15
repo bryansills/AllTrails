@@ -1,5 +1,5 @@
 import com.android.build.api.dsl.VariantDimension
-import org.jetbrains.kotlin.util.capitalizeDecapitalize.toUpperCaseAsciiOnly
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.util.Properties
@@ -53,9 +53,6 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
@@ -64,6 +61,13 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget("17")
+        optIn = listOf("kotlin.time.ExperimentalTime")
     }
 }
 
@@ -80,6 +84,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
+    ksp(libs.kotlin.metadata)
 
     implementation(libs.hilt.viewmodel.compose)
     implementation(libs.navigation.compose)
@@ -118,7 +123,7 @@ fun Project.rootProperties(propertiesPath: String): Properties {
 
 fun Properties.getSecret(
     propertyName: String,
-    environmentName: String = propertyName.replace(".", "_").toUpperCaseAsciiOnly(),
+    environmentName: String = propertyName.replace(".", "_").uppercase(),
     fallback: String = "INVALID $propertyName",
 ): String {
     val propertyValue: String? = this.getProperty(propertyName)
