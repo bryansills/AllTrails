@@ -11,7 +11,7 @@ composeBom = "2024.04.01"
 dagger = "2.52"
 ksp = "2.0.20-1.0.25"
 accompanist = "0.36.0"
-coroutines = "1.8.1"
+coroutines = "1.10.2"
 retrofit = "2.11.0"
 coil = "2.7.0"
 
