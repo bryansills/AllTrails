@@ -83,7 +83,6 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    ksp(libs.kotlin.metadata)
 
     implementation(libs.hilt.viewmodel.compose)
     implementation(libs.navigation.compose)
