@@ -82,6 +82,8 @@ dependencies {
     implementation(libs.androidx.material3)
 
     implementation(libs.hilt.android)
+    // TODO: remove when Hilt bundles the correct version of Kotlin
+    ksp(libs.kotlinJvmMetadata)
     ksp(libs.hilt.compiler)
 
     implementation(libs.hilt.viewmodel.compose)
