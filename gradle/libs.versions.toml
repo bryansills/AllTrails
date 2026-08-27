@@ -45,7 +45,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 # TODO: remove when Hilt bundles the correct version of Kotlin
 kotlinJvmMetadata = { module = "org.jetbrains.kotlin:kotlin-metadata-jvm", version.ref = "kotlin" }
 kotlinx-serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.11.0"
-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version = "2.9.8" }
+navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version = "2.10.0" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version = "5.5.0" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-kotlinx = { group = "com.squareup.retrofit2", name = "converter-kotlinx-serialization", version.ref = "retrofit" }
