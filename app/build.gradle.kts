@@ -29,13 +29,13 @@ android {
             useSupportLibrary = true
         }
 
-        val rootSecrets = rootProject.rootProperties("secrets.properties")
+        val secrets = getProperties("secrets.properties")
         manifestPlaceholders += mapOf(
-            "googleMapsApi" to rootSecrets.getSecret("google.places.api")
+            "googleMapsApi" to secrets.getSecret("google.places.api")
         )
         buildConfigString(
             "GooglePlacesApi",
-            rootSecrets.getSecret("google.places.api"),
+            secrets.getSecret("google.places.api"),
         )
     }
 
@@ -110,9 +110,9 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 }
 
-fun Project.rootProperties(propertiesPath: String): Properties {
+private fun Project.getProperties(propertiesPath: String): Properties {
     val result = Properties()
-    val keystorePropertiesFile = this.rootProject.file(propertiesPath)
+    val keystorePropertiesFile = this.file(propertiesPath)
     if (keystorePropertiesFile.isFile) {
         InputStreamReader(FileInputStream(keystorePropertiesFile), Charsets.UTF_8).use { reader ->
             result.load(reader)
@@ -121,7 +121,7 @@ fun Project.rootProperties(propertiesPath: String): Properties {
     return result
 }
 
-fun Properties.getSecret(
+private fun Properties.getSecret(
     propertyName: String,
     environmentName: String = propertyName.replace(".", "_").uppercase(),
     fallback: String = "INVALID $propertyName",
@@ -132,6 +132,6 @@ fun Properties.getSecret(
     return propertyValue ?: environmentValue ?: fallback
 }
 
-fun VariantDimension.buildConfigString(key: String, value: String) {
+private fun VariantDimension.buildConfigString(key: String, value: String) {
     this.buildConfigField("String", key, "\"$value\"")
 }
