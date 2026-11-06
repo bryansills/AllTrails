@@ -1,15 +1,15 @@
-package ninja.bryansills.lunchtime
+package ninja.bryansills.lunchtime.di
 
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.BindingContainer
+import dev.zacsweers.metro.ContributesTo
+import dev.zacsweers.metro.Provides
+import dev.zacsweers.metro.Qualifier
+import dev.zacsweers.metro.SingleIn
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import javax.inject.Qualifier
-import javax.inject.Singleton
 
 @Retention(AnnotationRetention.RUNTIME)
 @Qualifier
@@ -24,8 +24,8 @@ enum class LunchtimeDispatcher {
     Io,
 }
 
-@Module
-@InstallIn(SingletonComponent::class)
+@ContributesTo(AppScope::class)
+@BindingContainer
 internal object CoroutineScopesModule {
 
     @Provides
@@ -37,7 +37,7 @@ internal object CoroutineScopesModule {
     fun providesDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
 
     @Provides
-    @Singleton
+    @SingleIn(AppScope::class)
     @ApplicationScope
     fun providesCoroutineScope(
         @Dispatcher(LunchtimeDispatcher.Default) dispatcher: CoroutineDispatcher,

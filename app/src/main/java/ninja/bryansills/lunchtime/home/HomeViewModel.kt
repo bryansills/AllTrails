@@ -3,7 +3,10 @@ package ninja.bryansills.lunchtime.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.maps.model.LatLng
-import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.zacsweers.metro.AppScope
+import dev.zacsweers.metro.ContributesIntoMap
+import dev.zacsweers.metro.Inject
+import dev.zacsweers.metrox.viewmodel.ViewModelKey
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,8 +14,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import ninja.bryansills.lunchtime.Dispatcher
-import ninja.bryansills.lunchtime.LunchtimeDispatcher
+import ninja.bryansills.lunchtime.di.Dispatcher
+import ninja.bryansills.lunchtime.di.LunchtimeDispatcher
 import ninja.bryansills.lunchtime.location.LocationManager
 import ninja.bryansills.lunchtime.network.GooglePlacesApi
 import ninja.bryansills.lunchtime.network.LocationCircle
@@ -21,10 +24,11 @@ import ninja.bryansills.lunchtime.network.NearbySearch
 import ninja.bryansills.lunchtime.network.NetworkLocation
 import ninja.bryansills.lunchtime.network.NetworkPlace
 import ninja.bryansills.lunchtime.network.TextSearch
-import javax.inject.Inject
 
-@HiltViewModel
-class HomeViewModel @Inject constructor(
+@Inject
+@ViewModelKey
+@ContributesIntoMap(AppScope::class)
+class HomeViewModel(
     private val googlePlacesApi: GooglePlacesApi,
     private val locationManager: LocationManager,
     @Dispatcher(LunchtimeDispatcher.Io) private val ioDispatcher: CoroutineDispatcher

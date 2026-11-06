@@ -6,10 +6,9 @@ import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.serialization)
+    alias(libs.plugins.metro)
 }
 
 android {
@@ -18,7 +17,7 @@ android {
 
     defaultConfig {
         applicationId = "ninja.bryansills.lunchtime"
-        minSdk = 24
+        minSdk = 28
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
@@ -70,41 +69,39 @@ kotlin {
 }
 
 dependencies {
+    implementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(platform(libs.androidx.compose.bom))
 
+    implementation(libs.accompanist.permissions)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.material3)
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
-
-    implementation(libs.hilt.android)
-    // TODO: remove when Hilt bundles the correct version of Kotlin
-    ksp(libs.kotlinJvmMetadata)
-    ksp(libs.hilt.compiler)
-
-    implementation(libs.hilt.viewmodel.compose)
-    implementation(libs.navigation.compose)
-    implementation(libs.hilt.navigation.compose)
-    implementation(libs.kotlinx.serialization)
-    implementation(libs.accompanist.permissions)
-    implementation(libs.google.maps)
-    implementation(libs.google.location.services)
-    implementation(libs.coroutines)
-    implementation(libs.coroutines.play.services)
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.kotlinx)
-    implementation(libs.okhttp)
     implementation(libs.coil)
     implementation(libs.coil.compose)
+    implementation(libs.coroutines)
+    implementation(libs.coroutines.play.services)
+    implementation(libs.google.location.services)
+    implementation(libs.google.maps)
+    implementation(libs.kotlinx.serialization)
+    implementation(libs.metro.android)
+    implementation(libs.metro.runtime)
+    implementation(libs.metro.viewmodel)
+    implementation(libs.metro.viewmodel.compose)
+    implementation(libs.navigation.compose)
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.kotlinx)
 
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 }

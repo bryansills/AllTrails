@@ -55,7 +55,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmapOrNull
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -68,6 +67,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import dev.zacsweers.metrox.viewmodel.metroViewModel
 import kotlinx.serialization.Serializable
 import ninja.bryansills.lunchtime.R
 import ninja.bryansills.lunchtime.ui.theme.PaleGreen
@@ -78,7 +78,7 @@ data object Home
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: HomeViewModel = metroViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
