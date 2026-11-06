@@ -5,5 +5,4 @@ plugins {
     alias(libs.plugins.ksp) apply false
     alias(libs.plugins.compose.compiler) apply false
     alias(libs.plugins.serialization) apply false
-    alias(libs.plugins.parcelize) apply false
 }

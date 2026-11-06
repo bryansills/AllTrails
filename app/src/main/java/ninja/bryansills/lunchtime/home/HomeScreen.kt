@@ -1,7 +1,6 @@
 package ninja.bryansills.lunchtime.home
 
 import android.content.Context
-import android.os.Parcelable
 import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -41,7 +40,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSerializable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,7 +68,6 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MarkerInfoWindow
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
-import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 import ninja.bryansills.lunchtime.R
 import ninja.bryansills.lunchtime.ui.theme.PaleGreen
@@ -130,7 +128,7 @@ private fun ColumnScope.NormalView(
     isLoading: Boolean,
     modifier: Modifier = Modifier,
 ) {
-    var selectedView by rememberSaveable { mutableStateOf(HomeScreenView.List) }
+    var selectedView by rememberSerializable { mutableStateOf(HomeScreenView.List) }
 
     Box(modifier = modifier.fillMaxWidth().weight(1f)) {
         when (selectedView) {
@@ -148,8 +146,8 @@ private fun ColumnScope.NormalView(
     }
 }
 
-@Parcelize
-enum class HomeScreenView(@DrawableRes val oppositeIcon: Int, @StringRes val oppositeTitle: Int) : Parcelable {
+@Serializable
+enum class HomeScreenView(@DrawableRes val oppositeIcon: Int, @StringRes val oppositeTitle: Int) {
     List(oppositeIcon = R.drawable.icon_map, oppositeTitle = R.string.map_title),
     Map(oppositeIcon = R.drawable.icon_list, oppositeTitle = R.string.list_title),
     ;
