@@ -7,9 +7,11 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
 import dev.zacsweers.metro.AppScope
 import dev.zacsweers.metro.ContributesIntoMap
 import dev.zacsweers.metro.binding
@@ -34,12 +36,20 @@ class MainActivity(
         setContent {
             CompositionLocalProvider(LocalMetroViewModelFactory provides viewModelFactory) {
                 LunchtimeTheme {
-                    val navController = rememberNavController()
-                    NavHost(navController, startDestination = Home) {
-                        composable<Home> {
-                            HomeScreen()
+                    val backStack = rememberNavBackStack(Home)
+                    NavDisplay(
+                        entryDecorators = listOf(
+                            rememberSaveableStateHolderNavEntryDecorator(),
+                            rememberViewModelStoreNavEntryDecorator()
+                        ),
+                        backStack = backStack,
+                        onBack = backStack::removeLastOrNull,
+                        entryProvider = entryProvider {
+                            entry<Home> {
+                                HomeScreen()
+                            }
                         }
-                    }
+                    )
                 }
             }
         }

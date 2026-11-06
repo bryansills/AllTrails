@@ -55,6 +55,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.toBitmapOrNull
+import androidx.navigation3.runtime.NavKey
 import coil3.compose.AsyncImage
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -74,7 +75,7 @@ import ninja.bryansills.lunchtime.ui.theme.PaleGreen
 import ninja.bryansills.lunchtime.ui.theme.StrongGreen
 
 @Serializable
-data object Home
+data object Home : NavKey
 
 @Composable
 fun HomeScreen(
