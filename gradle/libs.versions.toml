@@ -38,7 +38,7 @@ coroutines-play-services = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 google-location-services = { group = "com.google.android.gms", name = "play-services-location", version = "21.4.0" }
 google-maps = { group = "com.google.maps.android", name = "maps-compose", version = "9.0.1" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.12.0"
+kotlinx-serialization-json = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.13.0"
 metro-android = { module = "dev.zacsweers.metro:metrox-android", version.ref = "metro" }
 metro-runtime = { module = "dev.zacsweers.metro:runtime", version.ref = "metro" }
 metro-viewmodel = { module = "dev.zacsweers.metro:metrox-viewmodel", version.ref = "metro" }
