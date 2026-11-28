@@ -1,7 +1,7 @@
 [versions]
 accompanist = "0.37.3"
 activity = "1.13.0"
-androidGradlePlugin = "9.5.1"
+androidGradlePlugin = "9.5.2"
 coil = "3.6.3"
 compose-bom = "2026.09.00"
 coroutines = "1.11.0"
